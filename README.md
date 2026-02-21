@@ -1,4 +1,61 @@
-# Bible_bot_2
-Bible bot is an artificial intelligence designed to engage in conversations about theological, spiritual, and biblical topics. It allows users to explore Scripture, ask questions about the Christian faith, and discover various interpretations from major traditions (Catholic, Protestant, Orthodox, etc.).
+# Thomas - AI Bible Assistant 📖
 
-With a knowledge base enriched by the Bible and trusted theological sources, BIBLE bot provides thoughtful, respectful, and educational responses. It’s tailored for believers, seekers, and scholars alike — a companion for reflection, study, and deeper understanding of sacred texts.
+**Your Interactive Companion for Biblical Exploration**  
+
+## 🌟 Key Features  
+- 💬 Interactive dialogue on biblical themes  
+- 🔍 Verse, character, and theological concept lookup  
+- 🎨 Simple and intuitive interface for all users  
+- 🔄 Instant conversation reset  
+- 🌙 Automatic light/dark mode  
+
+## 🚀 How to Use?  
+1. **Type your question** in the text area (e.g., "Who was Ruth?", "Explain John 3:16")  
+2. **Receive a contextualized answer** with biblical references  
+3. **Explore topics** through follow-up questions  
+4. Start over anytime with the "Reset Conversation" button  
+You can visit the [Thomas Bot](https://thomasbot.streamlit.app/) website to try it out
+> ℹ️ *Note: This is an educational prototype. For in-depth study, always consult sacred texts or religious authorities.*  
+
+## 🙏 Acknowledgments  
+- Built with [Streamlit](https://streamlit.io/) ❤️  
+- Theological inspiration: Louis Segond 1910 Bible  
+- Enhanced language model for biblical analysis  
+
+---
+
+👨💻 Created by [Ghilth GBAGUIDI](https://www.linkedin.com/in/ghilth/) in collab with [Freud BOKOSSA](https://www.linkedin.com/in/freud-bokossa-4220ba321)
+*"Seek and you will find." - Matthew 7:7 (NIV)*  
+
+
+
+
+# Thomas - Assistant IA Biblique 📖
+
+**Votre compagnon interactif pour explorer la Bible**  
+
+## 🌟 Fonctionnalités
+- 💬 Dialogue interactif sur des thèmes bibliques
+- 🔍 Recherche de versets, personnages et concepts théologiques
+- 🎨 Interface simple et accessible pour tous
+- 🔄 Réinitialisation instantanée de la conversation
+- 🌙 Mode clair/sombre automatique
+
+## 🚀 Comment utiliser ?
+1. **Posez votre question** dans la zone de texte (ex : "Qui était Ruth ?", "Explique Jean 3:16")
+2. **Recevez une réponse** contextualisée avec des références bibliques
+3. **Explorez les sujets** en posant des questions de suivi
+4. Recommencez à tout moment avec le bouton "Réinitialiser"
+Vous pouvez vous rendre sur le site [Thomas Bot](https://thomasbot.streamlit.app/) pour le tester
+> ℹ️ *Note : Ce projet est un prototype pédagogique, privilégiez toujours l'étude approfondie des textes sacrés.*
+
+## 🙏 Remerciements
+- Développé avec [Streamlit](https://streamlit.io/) ❤️
+- Inspiration théologique : Bible Louis Segond 1910
+- Modèle de langage amélioré pour l'analyse biblique
+
+---
+
+👨💻 Créé par [Ghilth GBAGUIDI](https://www.linkedin.com/in/ghilth/) en collaboration avec [Freud BOKOSSA](https://www.linkedin.com/in/freud-bokossa-4220ba321)
+*"Cherchez et vous trouverez" - Matthieu 7:7*
+
