@@ -1,5 +1,5 @@
 import streamlit as st
-from main import ask
+from main_freud import ask
 
 
 # Page configuration
@@ -99,6 +99,6 @@ with st.form(key="user_input_form"):
 
 # Footer
 st.markdown(
-    '<div class="footer">Made with ❤️ by <a href="https://www.linkedin.com/in/ghilth/" target="_blank">Ghilth GBAGUIDI</a></div>',
+    '<div class="footer">Made with ❤️ by <a href="https://www.linkedin.com/in/ghilth/" target="_blank">Ghilth GBAGUIDI</a> <a href="https://www.linkedin.com/in/freud-bokossa-4220ba321" target="_blank"> ( and un petit BOKOSSA Freud 🥹) </a></div>',
     unsafe_allow_html=True
 )
