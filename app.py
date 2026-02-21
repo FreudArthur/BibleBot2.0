@@ -1,21 +1,29 @@
+import time
+
 import streamlit as st
+
 from main_freud import ask
 
 
-# Page configuration
 st.set_page_config(page_title="Bible_Bot Thomas", page_icon="📖")
 
 
-# Initialiser l'historique des messages
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-def add_message(message, is_user):
-    st.session_state.messages.append({"message": message, "is_user": is_user})
+
+def add_message(role: str, content: str) -> None:
+    st.session_state.messages.append({"role": role, "content": content})
 
 
-# Custom CSS
-st.markdown("""
+def stream_response(text: str):
+    for word in text.split(" "):
+        yield word + " "
+        time.sleep(0.03)
+
+
+st.markdown(
+    """
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Roboto&display=swap" rel="stylesheet">
     <style>
         html, body, [class*="css"] {
@@ -23,7 +31,7 @@ st.markdown("""
         }
 
         .user-message {
-            background-color: #D1E8FF;  /* light blue */
+            background-color: #D1E8FF;
             color: #000000;
             padding: 10px;
             border-radius: 10px;
@@ -31,7 +39,7 @@ st.markdown("""
         }
 
         .bot-message {
-            background-color: rgba(245, 245, 245, 0.85);  /* semi-transparent grey */
+            background-color: rgba(245, 245, 245, 0.85);
             color: #111111;
             padding: 10px;
             border-radius: 10px;
@@ -40,7 +48,7 @@ st.markdown("""
 
         @media (prefers-color-scheme: dark) {
             .user-message {
-                background-color: #2D4F7C;  /* soft navy */
+                background-color: #2D4F7C;
                 color: #FFFFFF;
             }
 
@@ -57,48 +65,57 @@ st.markdown("""
             margin-top: 50px;
         }
     </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 
-# En-tête de l'application
 st.title("📖 Thomas - Assistant Biblique")
-st.write("👋 Salut ! Je suis **Thomas**, ton assistant en théologie. Pose-moi toutes tes questions sur la Bible : versets, personnages, interprétations, et plus encore.")
+st.write(
+    "👋 Salut ! Je suis **Thomas**, ton assistant en théologie. Pose-moi toutes tes questions sur la Bible : versets, personnages, interprétations, et plus encore."
+)
 
 
-# Sidebar avec bouton de réinitialisation
 with st.sidebar:
     st.markdown("## ⚙️ Options")
     if st.button("🔄 Réinitialiser la conversation"):
         st.session_state.messages = []
         st.rerun()
 
-
-# Affichage des messages précédents
-for msg in st.session_state.messages:
-    if msg["is_user"]:
-        st.markdown(f'<div class="user-message">🙋‍♂️ <b>Moi :</b><br>{msg["message"]}</div>', unsafe_allow_html=True)
-    else:
-        st.markdown(f'<div class="bot-message">📖 <b>Thomas :</b><br>{msg["message"]}</div>', unsafe_allow_html=True)
-
-
-# Formulaire pour poser une nouvelle question
-with st.form(key="user_input_form"):
-    user_input = st.text_area("✍️ Pose ta question ici :", height=100, placeholder="Ex. Que dit la Bible sur la polygamie ?")
-    submitted = st.form_submit_button("Envoyer")
-
-    if submitted:
-        if user_input.strip():
-            add_message(user_input, is_user=True)
-            with st.spinner("Thomas réfléchit..."):
-                response = ask(user_input)
-            add_message(response, is_user=False)
-            st.rerun()
+if len(st.session_state.messages) != 0 :
+    for msg in st.session_state.messages:
+        if msg["role"] == "user":
+            st.markdown(
+                f'<div class="user-message">🙋‍♂️ <b>Moi :</b><br>{msg["content"]}</div>',
+                unsafe_allow_html=True,
+            )
         else:
-            st.warning("❗ N'oublie pas de poser une vraie question !")
+            st.markdown(
+                f'<div class="bot-message">📖 <b>Thomas :</b><br>{msg["content"]}</div>',
+                unsafe_allow_html=True,
+            )
 
 
-# Footer
+prompt = st.chat_input("✍️ Pose ta question ici : (Ex. Que dit la Bible sur la polygamie ?)")
+
+if prompt:
+    add_message("user", prompt)
+    st.markdown(
+        f'<div class="user-message">🙋‍♂️ <b>Moi :</b><br>{prompt}</div>',
+        unsafe_allow_html=True,
+    )
+
+    with st.spinner("Thomas réfléchit..."):
+        response = ask(prompt)
+        streamed_response = st.write_stream(stream_response(response))
+
+    if streamed_response is None:
+        streamed_response = response
+
+    add_message("assistant", streamed_response)
+
+
 st.markdown(
     '<div class="footer">Made with ❤️ by <a href="https://www.linkedin.com/in/ghilth/" target="_blank">Ghilth GBAGUIDI</a> <a href="https://www.linkedin.com/in/freud-bokossa-4220ba321" target="_blank"> ( and un petit BOKOSSA Freud 🥹) </a></div>',
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
