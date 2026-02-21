@@ -5,6 +5,7 @@ import bible_vector
 from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 from sklearn.metrics.pairwise import cosine_similarity
+import streamlit as st
 
 load_dotenv()
 
@@ -12,7 +13,7 @@ load_dotenv()
 
 #API keys loading
 
-hugging_face_key = os.getenv("TOKEN")
+hugging_face_key = st.secrets["TOKEN"]
 
 # Creation de la connexion
 client = InferenceClient(token=hugging_face_key)
