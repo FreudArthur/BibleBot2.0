@@ -106,8 +106,11 @@ if prompt:
     )
 
     with st.spinner("Thomas réfléchit..."):
-        response = ask(prompt)
-        streamed_response = st.write_stream(stream_response(response))
+        try :
+            response = ask(prompt)
+            streamed_response = st.write_stream(stream_response(response))
+        except Exception as e:
+            response = "Désolé une erreur s'est produite durant la génération du message. Veuillez réessayez"
 
     if streamed_response is None:
         streamed_response = response
@@ -116,6 +119,6 @@ if prompt:
 
 
 st.markdown(
-    '<div class="footer">Made with ❤️ by <a href="https://www.linkedin.com/in/ghilth/" target="_blank">Ghilth GBAGUIDI</a> <a href="https://www.linkedin.com/in/freud-bokossa-4220ba321" target="_blank"> ( and un petit BOKOSSA Freud 🥹) </a></div>',
+    '<div class="footer">Made with ❤️ by <a href="https://www.linkedin.com/in/freud-bokossa-4220ba321" target="_blank"> BOKOSSA Freud </a></div>',
     unsafe_allow_html=True,
 )
