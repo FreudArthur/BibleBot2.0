@@ -46,7 +46,7 @@ def template(contexte):
     
     ** Reponds avec un maximum de 1200 mots
     
-    ** Reponds uniquiment en francais
+    ** Reponds uniquement en francais
     
     
 
