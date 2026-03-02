@@ -6,9 +6,14 @@ from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 from sklearn.metrics.pairwise import cosine_similarity
 import streamlit as st
+import random
+import logging
+
+
+
 
 load_dotenv()
-
+logger = logging.getLogger(__name__)
 
 
 #API keys loading
@@ -100,36 +105,57 @@ def passages_bibles_similaires(question : str):
     
     
     
-def pipeline(question , contexte):
+def build_prompt(question , contexte):
     is_greet = is_greeting(question)
     return build_system_prompt(question , contexte , is_greet)   
     
     
 
-
+REPONSES_SALUTATIONS = [
+    "Bonjour ! Je suis Thomas, posez-moi vos questions bibliques 😊",
+    "Salut ! Une question sur la Bible ?",
+    "Bonjour ! Comment puis-je vous aider aujourd'hui ?"
+]
 
 #Let's write a function to retrieve with llm
 
 def ask(question: str):
     
-  contexte = passages_bibles_similaires(question)
-  response = client.chat_completion(
-    model="mistralai/Mistral-7B-Instruct-v0.2",
-    messages=[
-        {
-            "role": "system",
-            "content": pipeline(question , contexte)
-    },
-
-        {"role": "user", "content": question}
-    ],
+    if is_greeting(question):
+        return  random.choice(REPONSES_SALUTATIONS)
     
-)
-  
-  if response:
-    return response.choices[0].message.content
-  else:
-    return "Veuillez poser une autre question."
+       # Validation question
+    if not question or not question.strip():
+        return "Veuillez poser une question."
+    
+    if len(question) > 1000:
+        return "Votre question est trop longue, pouvez-vous la reformuler ?"
+    
+    try:
+        contexte = passages_bibles_similaires(question)
+        response = client.chat_completion(
+        model="mistralai/Mistral-7B-Instruct-v0.2",
+        messages=[
+            {
+                "role": "system",
+                "content": build_prompt(question , contexte )
+        },
+
+            {"role": "user", "content": question}
+        ],
+        max_tokens=1200,       # Pour Limiter la génération
+        temperature=0.7,       # Pour réduire les hallucinations 
+        stream=False
+        
+    )
+    
+        if response:
+            return response.choices[0].message.content
+        else:
+            return "Veuillez poser une autre question."
+    except Exception as e:
+        logger.error(f"Erreur API : {e}")
+        return "Une erreur est survenue, veuillez réessayer."
 
 
 
