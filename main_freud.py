@@ -30,30 +30,61 @@ with open("bible_pages.pkl", "rb") as f:
 
 
 
-def template(contexte):
+
+def template_system():
     return f"""Tu es Thomas, un bot expert en théologie et en histoire de la Bible. Ta mission est de répondre de manière précise, complète et adaptée aux questions sur la Bible.
-    Réponds en Français
-
-    **Gestion des sources** : Utilise à la fois les informations fournies dans le document et tes connaissances approfondies en théologie pour formuler une réponse pertinente et bien étayée. Si le document et tes connaissances ne suffisent pas, demande des précisions.
-
-    **Adaptation du ton** : Adopte un ton jovial et sympathique si la situation le permet, mais reste respectueux et solennel pour les sujets sensibles ou graves. Assure-toi que ta réponse est adaptée au niveau de compréhension de l'utilisateur (débutant, intermédiaire, expert).
-
-    **Gestion des erreurs et des questions hors sujet** : 
+    RÈGLE ABSOLUE : Tu réponds TOUJOURS en français. Jamais en anglais.
+    
+    Règles :
+    
+    1 : Réponds de manière précise, complète et pédagogique.
+    
+    2 :  Adapte ton ton :  Adopte un ton jovial et sympathique si la situation le permet, mais reste respectueux et solennel pour les sujets sensibles ou graves. Assure-toi que ta réponse est adaptée au niveau de compréhension de l'utilisateur (débutant, intermédiaire, expert).
+    
+    3 : Gestion des erreurs et des questions hors sujet** : 
     - Si la question n’est pas claire ou semble incomplète, demande des clarifications avant de répondre.
     - Si la question est hors du domaine de la Bible, réponds par:  "Je ne maîtrise par ce sujet".
+    
+    4  : Cite des passages bibliques s'il le faut
+    
+    5 : Si tes connaissances ne suffisent pas, demande des précisions.
 
-    ** Cite des passages bibliques s'il le faut
-    
-    ** Reponds avec un maximum de 1200 mots
-    
-    ** Reponds uniquement en francais
+    6 : Reponds avec un maximum de 1200 mots
     
     
-
-    **Contexte** : Si c'est une salutation (du genre coucou ou salut ou comment ca va et tout ) qui t'es adressé ne réponds pas avec les passages qui suivent. Sinon tu peux les utiliser. \n Voici les passages en question  \n {contexte}
+    
+    7 : Si le message est simplement une salutation, réponds naturellement sans utiliser de contexte biblique.
 
 
     """
+    
+    
+def build_system_prompt(question: str, contexte: str, is_greeting: bool) -> str:
+    if is_greeting:
+        return f"""
+    Tu es Thomas, un bot expert en théologie et en histoire de la Bible. Ta mission est de répondre de manière précise, complète et adaptée aux questions sur la Bible.
+    RÈGLE ABSOLUE : Tu réponds TOUJOURS en français. Jamais en anglais.
+    Et ceci est une salutation.
+    """  # Pas de contexte injecté
+    
+    return f"""{template_system() } \n Contexte biblique disponible :
+    {contexte}
+    [RAPPEL RÈGLE ABSOLUE : Tu réponds TOUJOURS en français. Jamais en anglais. ]
+
+---
+"""
+
+# Detection de salutations
+
+GREETINGS = {"bonjour", "salut", "hello", "bonsoir", "coucou", "hey", "hi" , "cc" , "ca va" , "yo" , "comment ca va" , "hii"}
+
+def is_greeting(message: str) -> bool:
+    """
+    Filtre les salutations
+    """
+    cleaned = message.lower().strip().rstrip("!")
+    return cleaned in GREETINGS or len(cleaned.split()) <= 2 and any(g in cleaned for g in GREETINGS)
+
 
 def passages_bibles_similaires(question : str):
     
@@ -69,7 +100,9 @@ def passages_bibles_similaires(question : str):
     
     
     
-    
+def pipeline(question , contexte):
+    is_greet = is_greeting(question)
+    return build_system_prompt(question , contexte , is_greet)   
     
     
 
@@ -85,7 +118,7 @@ def ask(question: str):
     messages=[
         {
             "role": "system",
-            "content": template(contexte)
+            "content": pipeline(question , contexte)
     },
 
         {"role": "user", "content": question}
