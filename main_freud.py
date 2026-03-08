@@ -171,7 +171,7 @@ def ask(question: str):
     try:
         contexte = passages_bibles_similaires(question)
         response = client.chat_completion(
-        model="mistralai/Mistral-7B-Instruct-v0.2",
+        model="meta-llama/Llama-3.1-8B-Instruct",
         messages=[
             {
                 "role": "system",

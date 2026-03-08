@@ -4,3 +4,4 @@ bible_env
 __pycache__/
 /.files
 .streamlit
+local.py
